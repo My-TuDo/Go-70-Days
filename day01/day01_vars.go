@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-func main() {
+func main02() {
 	// 字符串类型(String)：存文字
 	var gameName string = "绝区零"
 
