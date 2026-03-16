@@ -4,7 +4,7 @@ import "fmt"
 
 var GO = "会赢的！！"
 
-func main()  {
+func main01() {
 
 	name := "谢成功"
 
