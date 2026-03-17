@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-func main() {
+func main03() {
 	// 1. 定义拥有的原石数量
 	var myCrystals int
 	fmt.Println("请输入你拥有的原石数量：")
