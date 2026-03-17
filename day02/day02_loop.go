@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-func main() {
+func main001() {
 	// 1. 定义一个切片：初始武器库
 	weapons := []string{"无锋剑", "和璞鸢", "西风长枪", "祭礼残章", "匣里龙吟"}
 
