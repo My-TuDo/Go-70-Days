@@ -21,7 +21,7 @@ func checkLevel(power int) string {
 	return "主力级别"
 }
 
-func main() {
+func main002() {
 	// 补充：map初始化问题。
 	/*	如果你明确要定义多少键值并直接传入，可以使用map字面量的方式来初始化Map，就像下面powers这个变量一样。
 	*	如果你不确定要存储多少数据，或者想要先创建一个空的Map再逐步添加数据，可以使用make函数来初始化Map，就像下面emptyMap这个变量一样。
