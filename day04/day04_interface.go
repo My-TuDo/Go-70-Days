@@ -1,13 +1,14 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 )
 
 // 1. 定义接口：战士（只要能攻击，就是战士）
+// 进阶升级：不仅能攻击，还能报名字
 type Warrior interface {
 	Attack() string
+	GetName() string
 }
 
 // 2. 定义两个不同的结构体（职业）
@@ -25,23 +26,34 @@ type Mage struct {
 }
 
 // 3. 让这两个职业都实现 Attack 方法
+// 给结构体实现 GetName 方法
 func (s Swordman) Attack() string {
 	return "Swordman" + s.Name + "发动了斩击！"
+}
+func (s Swordman) GetName() string {
+	return s.Name
 }
 
 func (a Archer) Attack() string {
 	return "Archer" + a.Name + "发射了强力箭矢！"
 }
+func (a Archer) GetName() string {
+	return a.Name
+}
 
 func (m Mage) Attack() string {
 	return "Mage" + m.Name + "施放了火球术！"
 }
+func (m Mage) GetName() string {
+	return m.Name
+}
 
 // 4. 定义一个带错误处理的函数：释放技能
+// 改为fmt.Errorf动态处理错误信息
 func castSkill(w Warrior, mana int) (string, error) {
 	if mana < 20 {
 		// 返回一个自定义错误
-		return "", errors.New("元素能量不足，无法释放技能！")
+		return "", fmt.Errorf("%s 元素能量不足，无法释放技能！", w.GetName())
 	}
 	return w.Attack(), nil
 }
