@@ -28,7 +28,7 @@ func (p *Player) equipWeapon(name string, damage int) {
 	fmt.Printf("%s 装备了 %s，伤害：%d\n", p.Name, p.Weapon.Name, p.Weapon.Damage)
 }
 
-func main() {
+func main0001() {
 	// 3. 创建一个角色实例
 	// 使用 & 取地址。创建的是一个指针对象
 	p1 := &Player{
