@@ -17,7 +17,7 @@ type User struct {
 	CreatedAt time.Time // 创建时间
 }
 
-func main() {
+func main072() {
 	// 2.数据库连接字符串（DSN）
 	// 格式： 用户名：密码@tcp(地址：端口)/数据库名?参数
 	dsn := "root:123456@tcp(127.0.0.1:3306)/go_70_days?charset=utf8mb4&parseTime=True&loc=Local"
