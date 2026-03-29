@@ -21,7 +21,7 @@ func scanPort(protocol, hostname string, port int, wg *sync.WaitGroup) {
 	fmt.Printf("发现开放端口“%d\n", port)
 }
 
-func main122
+func main122() {
 	hostname := "api-takumi.mihoyo.com"
 	ports := []int{80, 443, 8080, 8443} // 常见的 HTTP/HTTPS 端口
 
