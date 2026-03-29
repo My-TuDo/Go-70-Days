@@ -36,7 +36,7 @@ func probe(ctx context.Context, site string, ch chan<- Result, wg *sync.WaitGrou
 	}
 }
 
-func main() {
+func main123() {
 	// 待探测的站点列表（米哈游部分接口及其常用 DNS)
 	sites := []string{
 		"api-takumi.mihoyo.com:443",
