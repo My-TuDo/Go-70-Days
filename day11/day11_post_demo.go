@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func main() {
+func main111() {
 	// 1. 准备要发送的数据（GO结构体
 	data := map[string]string{
 		"act_id": "e202311201442471",
