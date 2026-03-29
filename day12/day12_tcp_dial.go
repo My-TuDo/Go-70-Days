@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func main() {
+func main121() {
 	address := "api-takumi.mihoyo.com:443" // 米哈游 API 服务器的 HTTPS 端口
 	timeout := 3 * time.Second
 
