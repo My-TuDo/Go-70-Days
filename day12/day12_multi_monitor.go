@@ -19,20 +19,23 @@ type Result struct {
 func probe(ctx context.Context, site string, ch chan<- Result, wg *sync.WaitGroup) {
 	defer wg.Done()
 
-	start := time.Now()
-	// 使用带 context 的拨号器，支持超市强断
-	d := net.Dialer{}
+	start := time.Now() // 记录开始时间
+	// 使用带 context 的拨号器，支持超时强断
+	// 建立连接
+	d := net.Dialer{} // 创建一个拨号器
 	conn, err := d.DialContext(ctx, "tcp", site)
 
+	// 判断成功，将连接释放
 	if err == nil {
 		conn.Close()
 	}
 
 	// 即使失败，也要把结果送回管道， 告诉主程序“我跑完了“
+	// conn 只是一个检测是否能连通的工具，不需要传回主程序，所以不放在 Result 里
 	ch <- Result{
-		Site:    site,
-		Latency: time.Since(start),
-		Err:     err,
+		Site:    site,              // 站点地址
+		Latency: time.Since(start), // 耗时
+		Err:     err,               // 错误信息（如果有）
 	}
 }
 
