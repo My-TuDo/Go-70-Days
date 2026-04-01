@@ -12,6 +12,7 @@ type Notifier interface {
 // 2.实现 A: 控制台告警
 type ConsoleNotifier struct{}
 
+// ConsoleNotifier 实现了 Notifier 接口的 Send 方法
 func (n ConsoleNotifier) Send(msg string) error {
 	fmt.Printf("[控制台告警] %s\n", msg)
 	return nil
@@ -22,6 +23,7 @@ type FeishuNotifier struct {
 	WebhookURL string
 }
 
+// FeishuNotifier 实现了 Notifier 接口的 Send 方法
 func (n FeishuNotifier) Send(msg string) error {
 	// 模拟发送消息到飞书机器人
 	fmt.Printf("[飞书推送] 发送到 %s: %s\n", n.WebhookURL, msg)
