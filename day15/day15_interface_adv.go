@@ -35,7 +35,7 @@ func TriggerAlert(n Notifier, message string) {
 	n.Send(message)
 }
 
-func main() {
+func main151() {
 	msg := "米游社 Cookie 即将过期！"
 
 	// 随时切换发送平台，这就是“可插拔” 架构
