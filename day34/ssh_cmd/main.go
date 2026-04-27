@@ -20,7 +20,7 @@ func main() {
 	}
 
 	// 2. 建立连接
-	addr := "192.168.36.154:22" // 连接自己
+	addr := "127.0.0.1:22" // 连接自己
 	fmt.Printf("正在尝试 SSH 连接 %s\n", addr)
 	client, err := ssh.Dial("tcp", addr, config)
 	if err != nil {
