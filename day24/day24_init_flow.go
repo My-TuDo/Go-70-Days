@@ -20,7 +20,7 @@ func init() {
 	fmt.Println("[Step 2] 安全防火墙已开启...")
 }
 
-func main() {
+func main241() {
 	// 4. 最后才是 main
 	fmt.Printf("[Step 3] 系统状态: %s\n", systemStatus)
 }
