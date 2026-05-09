@@ -7,7 +7,8 @@ import (
 	"strings"
 )
 
-func main() {
+// 万能拷贝工具
+func main201() {
 	// 1. 模拟一个数据源
 	source := strings.NewReader("Hello, World!")
 

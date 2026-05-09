@@ -6,11 +6,11 @@ import (
 	"strings"
 )
 
-func main() {
+func main261() {
 	fmt.Println("正在执行系统巡检...")
 
 	// 1. 定义要执行的命令： 查看系统负载(uptime)
-	// exec/Command("命令名", "参数1", "参数2", ...)
+	// exec.Command("命令名", "参数1", "参数2", ...)
 	cmd := exec.Command("uptime")
 
 	// 2. 执行并捕获输出结果
