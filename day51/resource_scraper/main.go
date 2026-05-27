@@ -43,7 +43,7 @@ func main() {
 }
 
 // scrapeMetrics 采样函数
-func scrapeMetrics(ctx context.Context) (*SystemMetrics, error) {
+func scrapeMetrics(ctx context.Context) (SystemMetrics, error) {
 	var m SystemMetrics
 	m.Timestamp = time.Now().Format("15:04:05")
 
@@ -69,5 +69,5 @@ func scrapeMetrics(ctx context.Context) (*SystemMetrics, error) {
 		m.TCPCount, _ = strconv.Atoi(countStr)
 	}
 
-	return &m, nil
+	return m, nil
 }
