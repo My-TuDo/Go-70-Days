@@ -25,7 +25,13 @@ import (
 func GenerateReport(result scanner.ScanResult) (string, error) {
 	// TODO: 在这里写你的代码
 
-	return "", nil
+	jsonStr, err := json.MarshalIndent(result, "", "  ")
+	if err != nil {
+		fmt.Printf("生成 JSON 报告时发生错误: %s\n", err)
+		return "", err
+	}
+
+	return string(jsonStr), nil
 }
 
 // SaveReport 将扫描结果保存到 outputPath 文件中
@@ -38,32 +44,41 @@ func GenerateReport(result scanner.ScanResult) (string, error) {
 //  5. 返回错误（如果有）
 //
 // 提示：
-//   输出文件路径建议加上 .json 后缀
-//   可以用 filepath.Ext 检查，如果没有后缀就自动加 .json
+//
+//	输出文件路径建议加上 .json 后缀
+//	可以用 filepath.Ext 检查，如果没有后缀就自动加 .json
 func SaveReport(result scanner.ScanResult, outputPath string) error {
 	// TODO: 在这里写你的代码
-	//
-	// 参考骨架：
-	//
-	// jsonStr, err := GenerateReport(result)
-	// if err != nil { return err }
-	//
-	// // 确保文件有 .json 后缀
-	// if filepath.Ext(outputPath) != ".json" {
-	//     outputPath += ".json"
-	// }
-	//
-	// file, err := os.Create(outputPath)
-	// if err != nil { return err }
-	// defer file.Close()
-	//
-	// _, err = file.WriteString(jsonStr)
-	// if err != nil { return err }
-	//
-	// fmt.Printf("报告已保存到: %s\n", outputPath)
-	// return nil
 
+	// 生成 JSON 报告
+	jsonStr, err := GenerateReport(result)
+	if err != nil {
+		return err
+	}
+
+	// 确保文件有 .json 后缀
+	if filepath.Ext(outputPath) != ".json" {
+		outputPath += ".json"
+	}
+
+	// 创建输出文件
+	file, err := os.Create(outputPath)
+	if err != nil {
+		fmt.Printf("创建报告文件时发生错误: %s\n", err)
+		return err
+	}
+	defer file.Close()
+
+	// 写入 JSON 字符串
+	_, err = file.WriteString(jsonStr)
+	if err != nil {
+		fmt.Printf("写入报告文件时发生错误: %s\n", err)
+		return err
+	}
+
+	fmt.Printf("报告已保存到: %s\n", outputPath)
 	return nil
+
 }
 
 // PrintSummary 在终端打印简洁的统计摘要
@@ -78,11 +93,25 @@ func SaveReport(result scanner.ScanResult, outputPath string) error {
 // INFO:  20 行
 // WARN:   6 行
 // ERROR:  4 行  ⚠️
+
 func PrintSummary(result scanner.ScanResult) {
 	// TODO: 用 fmt.Printf 打印格式化的摘要
 	// 参考 day37 的 JSON 输出思路，但这里用文本格式
 	//
 	// 提示：可以用 result.Summary.TotalByLevel[scanner.LevelError] 获取 ERROR 总数
 
-	fmt.Println("TODO: 实现 PrintSummary")
+	fmt.Println("=== 日志扫描报告 ===")
+	fmt.Printf("扫描时间: %s\n", result.ScannedAt)
+	fmt.Printf("扫描文件: %d 个\n", len(result.Files))
+	fmt.Printf("总行数:   %d 行\n", result.Summary.TotalLines)
+	fmt.Println("-----------------")
+	fmt.Printf("INFO:  %d 行\n", result.Summary.TotalByLevel[scanner.LevelInfo])
+	fmt.Printf("WARN:   %d 行\n", result.Summary.TotalByLevel[scanner.LevelWarn])
+	errorCount := result.Summary.TotalByLevel[scanner.LevelError]
+	if errorCount > 0 {
+		fmt.Printf("ERROR:  %d 行  ⚠️\n", errorCount)
+	} else {
+		fmt.Printf("ERROR:  %d 行\n", errorCount)
+	}
+
 }

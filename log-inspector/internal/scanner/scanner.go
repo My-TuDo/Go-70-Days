@@ -28,29 +28,22 @@ import (
 //  6. 最后计算 Summary（累加每个文件的统计值）
 //  7. 返回 ScanResult
 func ScanDir(dir string) (ScanResult, error) {
-
 	result := ScanResult{
 		ScannedAt: time.Now().Format("2006-01-02 15:04:05"),
 	}
 
-	// 遍历目录，处理 .log 文件
 	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			fmt.Printf("访问路径时发生错误: %s\n", err)
 			return err
 		}
-
-		// 判断是否是目录，如果是目录则跳过
 		if info.IsDir() {
 			return nil
 		}
-
-		// 判断文件后缀是否为 .log，如果不是则跳过
 		if !strings.HasSuffix(info.Name(), ".log") {
 			return nil
 		}
 
-		// 处理 .log 文件
 		fileResult, err := scanFile(path)
 		if err != nil {
 			fmt.Printf("处理文件时发生错误: %s\n", err)
@@ -65,28 +58,6 @@ func ScanDir(dir string) (ScanResult, error) {
 	}
 	result.Summary = calcSummary(result.Files)
 
-	// TODO: 在这里写你的代码
-	//
-	// 参考骨架：
-	//
-	// result := ScanResult{
-	//     ScannedAt: time.Now().Format("2006-01-02 15:04:05"),
-	// }
-	//
-	// 遍历目录：
-	// filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
-	//     if err != nil { return err }
-	//     if info.IsDir() { return nil }
-	//     if !strings.HasSuffix(info.Name(), ".log") { return nil }
-	//
-	//     fileResult, err := scanFile(path)
-	//     if err != nil { return err }
-	//     result.Files = append(result.Files, fileResult)
-	//     return nil
-	// })
-	//
-	// 计算汇总...
-	//
 	return result, nil
 }
 
@@ -102,31 +73,6 @@ func ScanDir(dir string) (ScanResult, error) {
 //
 // 提示：判断级别可以用 strings.Contains(line, "[ERROR]")
 func scanFile(path string) (LogFileResult, error) {
-	// TODO: 在这里写你的代码
-	//
-	// 参考骨架：
-	//
-	// result := LogFileResult{
-	//     FilePath: path,
-	//     Counts:   make(map[LogLevel]int),
-	// }
-	//
-	// file, err := os.Open(path)
-	// if err != nil { return result, err }
-	// defer file.Close()
-	//
-	// scanner := bufio.NewScanner(file)
-	// for scanner.Scan() {
-	//     line := scanner.Text()
-	//     result.Total++
-	//
-	//     // 判断日志级别...
-	//     // 计数...
-	//     // ERROR 行存到 result.Errors...
-	// }
-	//
-	// return result, scanner.Err()
-	//
 	// 只读形式打开文件。
 	file, err := os.Open(path)
 	if err != nil {
