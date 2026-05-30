@@ -85,6 +85,70 @@ docker run --rm -v $(pwd)/testdata:/logs log-inspector /logs
 
 ---
 
+## 🧠 命令行参数知识点（复习用）
+
+### `go run ./cmd/log-inspector ./testdata` 逐词拆解
+
+```
+go    run    ./cmd/log-inspector    ./testdata
+│     │      │                      │
+│     │      │                      └─ 传给 main.go 的参数
+│     │      │                         → os.Args[1]
+│     │      │
+│     │      └─ 包的路径（不是文件名）
+│     │         告诉 Go："去这个目录编译并运行"
+│     │
+│     └─ 子命令：编译 + 运行一步到位
+│
+└─ Go 工具链入口
+```
+
+### `os.Args` 是什么？
+
+`os.Args` 是一个字符串切片，存的是你在终端敲的所有"词"。
+
+```go
+// 运行：go run ./cmd/log-inspector ./testdata
+//
+// os.Args[0] = 编译出的二进制路径（Go 自己管，你看不到）
+// os.Args[1] = "./testdata"
+// len(os.Args) = 2
+```
+
+敲几个词，`os.Args` 就有几个元素。
+
+### 为什么代码里有默认值还要传参？
+
+```go
+dir := "./testdata"               // ① 先给一个保底值
+if len(os.Args) >= 2 {            // ② 如果你传了参数
+    dir = os.Args[1]              // ③ 就用你的，覆盖保底值
+}
+```
+
+| 你敲的命令 | dir 最终值 | 原因 |
+|:-----------|:----------:|:-----|
+| `go run ./cmd/log-inspector` | `./testdata` | 没传参，走默认值 |
+| `go run ./cmd/log-inspector /var/log` | `/var/log` | 传了参数，覆盖默认值 |
+
+**默认值的作用**：让你不加参数也能跑，而不是报错崩溃。
+
+### 为什么用 `./cmd/log-inspector` 而不是 `main.go`？
+
+这是 Go 的生产级项目结构。一个项目可以有多个入口：
+
+```
+cmd/
+├── server/      → 启动 HTTP 服务
+├── worker/      → 启动后台任务
+└── log-inspector/ → 日志巡检工具
+```
+
+每个子目录都有自己的 `main.go`，`go run ./cmd/xxx` 选择跑哪一个。
+如果所有 `main.go` 都放根目录，Go 不允许同一个包里有多个 `main` 函数。
+
+---
+
 ## 学习笔记
 
 这个项目是第一次**从零构建**一个完整的 Go 项目，要点记录：

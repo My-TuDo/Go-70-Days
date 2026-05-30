@@ -10,7 +10,7 @@ import (
 
 func main() {
 	// 先直接测试 scanner 包是否能正常编译和工作
-	dir := "./testdata"
+	dir := "./testdata" // 默认值
 	if len(os.Args) >= 2 {
 		dir = os.Args[1]
 	}
