@@ -1,0 +1,12 @@
+# 探测目标列表
+# 程序启动时会读取这个文件，并发探测所有目标
+targets:
+  - name: "baidu"
+    url: "https://www.baidu.com"
+    timeout_sec: 5
+  - name: "github"
+    url: "https://github.com"
+    timeout_sec: 5
+  - name: "local-http"
+    url: "http://localhost:8080/health"
+    timeout_sec: 3
