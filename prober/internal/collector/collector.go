@@ -9,6 +9,7 @@ import (
 
 	"prober/internal/model"
 
+	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
 )
 
@@ -130,7 +131,7 @@ func ProbeAll(targets []model.TargetConfig) []model.ProbeResult {
 //  1. 调用 ProbeAll 并发探测所有目标
 //  2. 遍历每个结果，用 db.Create 写入 MySQL
 //  3. 打印每个目标的探测结果到终端
-func RunProbeCycle(targets []model.TargetConfig, db *gorm.DB) {
+func RunProbeCycle(targets []model.TargetConfig, db *gorm.DB, rdb *redis.Client) {
 	// TODO: 在这里写你的代码
 	//
 
@@ -138,8 +139,13 @@ func RunProbeCycle(targets []model.TargetConfig, db *gorm.DB) {
 	results := ProbeAll(targets)
 
 	for _, r := range results {
-		// 写入MySql
+		// 写入 MySQL
 		db.Create(&r)
+
+		// 写入 Redis 缓存
+		if rdb != nil {
+			UpdateCache(rdb, r)
+		}
 
 		// 打印结果
 		status := "✅"

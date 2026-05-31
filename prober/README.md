@@ -450,6 +450,99 @@ if err != nil {
 
 ---
 
+## 🧠 MySQL vs Redis：为什么两个都要用？（复习用）
+
+### 一句话区别
+
+| | MySQL | Redis |
+|:--|:------|:------|
+| 数据存在哪 | **硬盘** | **内存** |
+| 读写速度 | 慢（毫秒级，要读写磁盘） | 快（微秒级，直接操作内存） |
+| 数据持久性 | 关机不丢 | 关机丢（但有持久化方案） |
+| 查询方式 | SQL（`WHERE`、`ORDER BY`） | 按 key 直接拿 |
+| 存什么数据 | 所有历史记录 | 最新状态（临时缓存） |
+
+### 用你的项目理解
+
+```
+拨测结果产生后：
+    │
+    ├──→ MySQL（硬盘）：存到 probe_results 表
+    │     每次探测都 insert 一条
+    │     一个月后你有 10 万条记录
+    │     关机重启数据还在
+    │     查询需要写 SQL：WHERE target_name = 'baidu'
+    │
+    └──→ Redis（内存）：写入 key probe:status:baidu
+          每次探测都覆盖写（同一个 key）
+          只有最新一条
+          设置 60 秒过期，过期自动消失
+          查询直接给 key：GET probe:status:baidu
+```
+
+### 为什么不用一个搞定全部？
+
+**只用 MySQL 存全部（包括最新状态）：**
+
+```sql
+SELECT * FROM probe_results 
+WHERE target_name = 'baidu' 
+ORDER BY created_at DESC 
+LIMIT 1;
+```
+
+每次访问 `/status` 都要执行一次 SQL，查 10 万条记录后排序取第一条。高并发下 MySQL 扛不住。
+
+**只用 Redis 存全部（包括历史记录）：**
+
+```bash
+LPUSH probe:history:baidu "{...}"   # 每次探测都往列表左边推
+```
+
+Redis 的数据都在内存里，一个月后 10 万条记录占满内存——贵，且关机就没了。
+
+**所以两个都用：MySQL 存历史（硬盘大、持久），Redis 缓存最新（内存快）。**
+
+### 你的项目里分别在哪儿用？
+
+| 操作 | 用哪个 | 为什么 |
+|:----|:------|:-------|
+| 每 30 秒存一次探测结果 | MySQL | 历史记录需要持久化 |
+| 每 30 秒更新最新状态 | Redis | `/status` API 要秒回 |
+| 用户查 `GET /history?name=baidu` | MySQL | 查历史，需要 SQL 筛选 |
+| 用户查 `GET /status` | Redis | 查最新，直接读内存 |
+
+### 读和写的时机
+
+```
+时间轴：
+│
+├── 第 0 秒：探测 baidu
+│   ├── INSERT INTO probe_results → MySQL（写）
+│   └── SET probe:status:baidu → Redis（写）
+│
+├── 第 0.1 秒：用户访问 /status
+│   └── GET probe:status:baidu → Redis（读） ← 秒回
+│
+├── 第 30 秒：探测 baidu
+│   ├── INSERT INTO probe_results → MySQL（写）
+│   └── SET probe:status:baidu → Redis（写，覆盖旧的）
+│
+├── 第 31 秒：用户访问 /history?name=baidu
+│   └── SELECT * FROM probe_results WHERE ... → MySQL（读）
+│
+└── 第 61 秒：Redis 第一条记录过期（60 秒 TTL）
+    但没关系，最新的第 30 秒的记录又写了 60 秒
+```
+
+### 一个口诀
+
+> MySQL 存历史，Redis 存最新。
+> 查询历史走 SQL，查最新走内存。
+> 不用担心不一致——写的时候就写两份。
+
+---
+
 ## 并发模型
 
 采用 **channel 信号量**模式控制并发数：

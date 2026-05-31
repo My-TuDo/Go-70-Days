@@ -37,27 +37,21 @@ func main() {
 
 	// ===== 2. 连接 MySQL =====
 	// TODO: 用 GORM 连接 MySQL
-	// dsn := "root:123456@tcp(127.0.0.1:3306)/prober?charset=utf8mb4&parseTime=True&loc=Local"
-	// db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	// if err != nil {
-	//     log.Fatalf("连接 MySQL 失败: %v", err)
-	// }
+	dsn := "root:123456@tcp(localhost:3306)/prober?charset=utf8mb4&parseTime=True&loc=Local"
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if err != nil {
+		log.Fatalf("连接 MySQL 失败: %v", err)
+	}
 	// 自动迁移（建表）
-	// db.AutoMigrate(&model.ProbeResult{})
-	// fmt.Println("MySQL 连接成功")
-
-	var db *gorm.DB // 先占位，等你填
-	_ = db
+	db.AutoMigrate(&model.ProbeResult{})
+	fmt.Println("MySQL 连接成功")
 
 	// ===== 3. 连接 Redis =====
 	// TODO: 用 redis.NewClient 连接 Redis
-	// rdb := redis.NewClient(&redis.Options{
-	//     Addr: "localhost:6379",
-	// })
-	// fmt.Println("Redis 连接成功")
-
-	var rdb *redis.Client // 先占位，等你填
-	_ = rdb
+	rdb := redis.NewClient(&redis.Options{
+		Addr: "localhost:6379",
+	})
+	fmt.Println("Redis 连接成功")
 
 	// ===== 4. 启动 HTTP 服务 =====
 	r := gin.Default()
@@ -75,14 +69,14 @@ func main() {
 	// 先立即执行一次，然后每 30 秒执行一次
 	go func() {
 		// 立即执行第一轮
-		collector.RunProbeCycle(config.Targets, db)
+		collector.RunProbeCycle(config.Targets, db, rdb)
 
 		// 每 30 秒执行一次
 		ticker := time.NewTicker(30 * time.Second)
 		defer ticker.Stop()
 
 		for range ticker.C {
-			collector.RunProbeCycle(config.Targets, db)
+			collector.RunProbeCycle(config.Targets, db, rdb)
 		}
 	}()
 
