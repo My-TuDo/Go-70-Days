@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package kvault;
+
+option go_package = "kvault/api/kvaultpb";
+
+// KVault 配置存储服务
+service KVault {
+    rpc Set(SetRequest) returns (SetResponse);
+    rpc Get(GetRequest) returns (GetResponse);
+    rpc Delete(DeleteRequest) returns (DeleteResponse);
+    rpc ListKeys(ListKeysRequest) returns (ListKeysResponse);
+}
+
+message SetRequest {
+    string key = 1;
+    string value = 2;
+}
+
+message SetResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+message GetRequest {
+    string key = 1;
+}
+
+message GetResponse {
+    bool found = 1;
+    string value = 2;
+}
+
+message DeleteRequest {
+    string key = 1;
+}
+
+message DeleteResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+message ListKeysRequest {}
+
+message ListKeysResponse {
+    repeated string keys = 1;
+}
