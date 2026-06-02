@@ -74,6 +74,7 @@
 
 ### 🛠️ 实战项目
 - [🔍 log-inspector — 日志巡检 CLI 工具](./log-inspector)
+- [📡 prober — 分布式服务拨测系统（高并发 + MySQL + Redis + Docker Compose）](./prober)
 
 ---
 
