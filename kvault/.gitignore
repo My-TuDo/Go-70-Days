@@ -1,0 +1,3 @@
+# 编译产物（仅限 kvault/ 根目录下的可执行文件）
+/server
+/client
