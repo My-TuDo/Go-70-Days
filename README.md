@@ -75,6 +75,7 @@
 ### 🛠️ 实战项目
 - [🔍 log-inspector — 日志巡检 CLI 工具](./log-inspector)
 - [📡 prober — 分布式服务拨测系统（高并发 + MySQL + Redis + Docker Compose）](./prober)
+- [🔐 kvault — gRPC 配置存储服务（Protobuf + 并发安全 + Makefile）](./kvault)
 - [🔐 kvault — gRPC 配置存储服务（Protobuf + gRPC，开发中）](./kvault)
 
 ---
