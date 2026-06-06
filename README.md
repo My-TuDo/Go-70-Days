@@ -76,6 +76,7 @@
 - [🔍 log-inspector — 日志巡检 CLI 工具](./log-inspector)
 - [📡 prober — 分布式服务拨测系统（高并发 + MySQL + Redis + Docker Compose）](./prober)
 - [🔐 kvault — gRPC 配置存储服务（Protobuf + 并发安全 + Makefile）](./kvault)
+- [🚨 sentry — 报警聚合推送服务（标准库 + slog + GitHub Actions CI）](./sentry)
 - [🔐 kvault — gRPC 配置存储服务（Protobuf + gRPC，开发中）](./kvault)
 
 ---
