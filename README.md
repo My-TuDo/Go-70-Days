@@ -77,7 +77,7 @@
 - [📡 prober — 分布式服务拨测系统（高并发 + MySQL + Redis + Docker Compose）](./prober)
 - [🔐 kvault — gRPC 配置存储服务（Protobuf + 并发安全 + Makefile）](./kvault)
 - [🚨 sentry — 报警聚合推送服务（标准库 + slog + GitHub Actions CI）](./sentry)
-- [🔐 kvault — gRPC 配置存储服务（Protobuf + gRPC，开发中）](./kvault)
+- [🌐 netdiag — 网络诊断工具箱（DNS/TCP/HTTP/TLS + goroutine 并发）](./netdiag)
 
 ---
 
