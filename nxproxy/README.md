@@ -46,6 +46,9 @@ curl http://localhost:8080/
 # 验证反向代理到 Go 后端
 curl http://localhost:8080/api/hello
 curl http://localhost:8080/api/status
+
+# 一键停止
+make down
 ```
 
 ---
