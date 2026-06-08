@@ -21,7 +21,7 @@ RUN CGO_ENABLED=0 go build -ldflags="-s -w" -o /build/nxproxy ./cmd/api/
 # 运行阶段 ： 使用更小的基础镜像
 ## alpine 5MB左右，有 Shell、包管理器
 ## busybox 1MB左右，有 Shell
-## scrach 0MB，空镜像， 适合GO二进制文件
+## scratch 0MB，空镜像， 适合GO二进制文件
 FROM scratch
 
 # 从构建阶段复制二进制文件

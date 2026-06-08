@@ -78,6 +78,7 @@
 - [🔐 kvault — gRPC 配置存储服务（Protobuf + 并发安全 + Makefile）](./kvault)
 - [🚨 sentry — 报警聚合推送服务（标准库 + slog + GitHub Actions CI）](./sentry)
 - [🌐 netdiag — 网络诊断工具箱（DNS/TCP/HTTP/TLS + goroutine 并发）](./netdiag)
+- [🔁 nxproxy — Nginx 反向代理 + Go 后端（Docker Compose 双容器编排）](./nxproxy)
 
 ---
 
