@@ -8,3 +8,9 @@ run:
 
 clean:
 	rm -f api
+
+up:
+	docker-compose up -d --build
+
+down:
+	docker-compose down
