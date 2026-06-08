@@ -38,7 +38,7 @@ nxproxy/
 
 ```bash
 # 一键构建并启动
-docker compose up -d --build
+make up
 
 # 验证 Nginx 静态文件
 curl http://localhost:8080/
