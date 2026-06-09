@@ -90,3 +90,23 @@ func TestDelete(t *testing.T) {
 		})
 	}
 }
+
+// 列出所有key
+func TestListKeys(t *testing.T) {
+	s := New()
+
+	keys := []string{
+		"key1",
+		"key2",
+		"key3",
+	}
+
+	for _, key := range keys {
+		s.Set(key, "value")
+	}
+
+	listedKeys := s.ListKeys()
+	if len(listedKeys) != len(keys) {
+		t.Errorf("ListKeys返回的键数量 %d, 期望 %d", len(listedKeys), len(keys))
+	}
+}
