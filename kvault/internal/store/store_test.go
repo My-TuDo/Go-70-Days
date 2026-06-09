@@ -25,3 +25,22 @@ func TestGetMissing(t *testing.T) {
 		t.Errorf("Expected missing key to not exist")
 	}
 }
+
+// 并发安全测试:10个进程同时读写，跑完没有 data race 算通过
+func TestConcurrentSafety(t *testing.T) {
+	s := New()
+	var wg sync.WaitGroup
+	for i := 0; i < 10; i++ {
+		wg.Add(1)
+		go func(i int) {
+			defer wg.Done()
+			key := fmt.Sprintf("key%d", i)
+			s.Set(key, fmt.Sprintf("value%d", i))
+			val, ok := s.Get(key)
+			if !ok || val != fmt.Sprintf("value%d", i) {
+				t.Errorf("Concurrent safety test failed for %s", key)
+			}
+		}
+	}
+	wg.Wait()
+}
