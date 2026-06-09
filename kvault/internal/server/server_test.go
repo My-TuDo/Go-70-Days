@@ -39,3 +39,58 @@ func TestServerSetAndGet(t *testing.T) {
 		t.Errorf("Get()返回 Value=%s，期望 testValue", getResp.GetValue())
 	}
 }
+
+// 测试 Get 不存在的 key
+func TestServerGetMissing(t *testing.T) {
+	s := store.New()
+	svr := New(s)
+
+	getResp, err := svr.Get(context.Background(), &kvaultpb.GetRequest{
+		Key: "missingKey",
+	})
+	// 期望： err == nil, getResp.Found == false
+	if err != nil {
+		t.Errorf("Get()返回错误: %v", err)
+	}
+	if getResp.GetFound() {
+		t.Errorf("Get()返回 Found=true，期望 false")
+	}
+}
+
+// 测试 Delete
+func TestServerDelete(t *testing.T) {
+	s := store.New()
+	svr := New(s)
+
+	// 先 Set 一个 key
+	_, err := svr.Set(context.Background(), &kvaultpb.SetRequest{
+		Key:   "keyToDelete",
+		Value: "valueToDelete",
+	})
+	if err != nil {
+		t.Errorf("Set()返回错误: %v", err)
+	}
+
+	// Delete
+	delResp, err := svr.Delete(context.Background(), &kvaultpb.DeleteRequest{
+		Key: "keyToDelete",
+	})
+	// 期望： err == nil, delResp.Success == true
+	if err != nil {
+		t.Errorf("Delete()返回错误: %v", err)
+	}
+	if !delResp.GetSuccess() {
+		t.Errorf("Delete()返回 Success=false，期望 true")
+	}
+
+	// 再 Get 一次，应该找不到
+	getResp, err := svr.Get(context.Background(), &kvaultpb.GetRequest{
+		Key: "keyToDelete",
+	})
+	if err != nil {
+		t.Errorf("Get()返回错误: %v", err)
+	}
+	if getResp.GetFound() {
+		t.Errorf("Get()返回 Found=true，期望 false")
+	}
+}
