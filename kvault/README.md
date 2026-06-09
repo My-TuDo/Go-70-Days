@@ -6,7 +6,7 @@
 
 ## 项目状态
 
-✅ **已完成** — gRPC 服务端 + 命令行客户端全功能可用。
+✅ **已完成** — gRPC 服务端 + 命令行客户端全功能可用，单元测试 100% 覆盖。
 
 ---
 
@@ -89,6 +89,26 @@ go run ./cmd/client/ list
 
 ---
 
+## 测试
+
+```bash
+# 跑全部测试（含并发安全检测）
+go test -v -race ./...
+
+# 查看覆盖率
+go test -cover ./internal/store/
+go test -cover ./internal/server/
+```
+
+当前覆盖率：**store 100%** / **server 100%**
+
+| 包 | 用例数 | 覆盖 |
+|:---|:------:|:----:|
+| store | 5（含表格驱动 4 条 + 并发安全） | 100% |
+| server | 4（Set/Get/Delete/ListKeys + 边界） | 100% |
+
+---
+
 ## 构建
 
 ```bash
@@ -106,11 +126,10 @@ go build ./cmd/client/   # 产出 ./client
 - ✅ **gRPC 服务端生命周期** — `net.Listen` → `grpc.NewServer` → `Register` → `Serve`
 - ✅ **gRPC 客户端调用** — `grpc.NewClient` → `NewKVaultClient` → 调用 RPC 方法
 - ✅ **Response 字段正确填充** — proto 生成的 struct 每个字段都要显式赋值（`Found`、`Success` 等）
-- ⬜ **优雅退出** — `signal.Notify` + `grpcServer.GracefulStop()`
-- ⬜ **端口配置** — `flag` 包支持 `--port` 参数
-- ⬜ **命令行子命令** — `os.Args` 解析 set/get/delete/list
-- ⬜ **单元测试 / 集成测试**
-- ⬜ **Makefile / 工程化收尾**
+- ✅ **优雅退出** — `signal.Notify` + `grpcServer.GracefulStop()`
+- ✅ **命令行子命令** — `os.Args` 解析 set/get/delete/list
+- ✅ **单元测试 / 集成测试** — store 和 server 双包 100% 覆盖，表格驱动 + 并发安全
+- ✅ **Makefile / 工程化收尾** — proto / build / run-server / run-client / clean
 
 ---
 
