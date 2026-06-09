@@ -94,3 +94,39 @@ func TestServerDelete(t *testing.T) {
 		t.Errorf("Get()返回 Found=true，期望 false")
 	}
 }
+
+// 测试 ListKeys
+func TestServerListKeys(t *testing.T) {
+	s := store.New()
+	svr := New(s)
+
+	// Set 多个 key
+	keys := []string{"key1", "key2", "key3"}
+	for _, key := range keys {
+		_, err := svr.Set(context.Background(), &kvaultpb.SetRequest{
+			Key:   key,
+			Value: "someValue",
+		})
+		if err != nil {
+			t.Errorf("Set()返回错误: %v", err)
+		}
+	}
+
+	// ListKeys
+	listResp, err := svr.ListKeys(context.Background(), &kvaultpb.ListKeysRequest{})
+	// 期望： err == nil, listResp.Keys 包含所有设置的 keys
+	if err != nil {
+		t.Errorf("ListKeys()返回错误: %v", err)
+	}
+
+	keySet := make(map[string]struct{})
+	for _, k := range listResp.GetKeys() {
+		keySet[k] = struct{}{}
+	}
+
+	for _, expectedKey := range keys {
+		if _, exists := keySet[expectedKey]; !exists {
+			t.Errorf("ListKeys()返回的 keys 中缺少 %q", expectedKey)
+		}
+	}
+}
