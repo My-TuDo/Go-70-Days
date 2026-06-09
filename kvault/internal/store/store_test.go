@@ -65,3 +65,28 @@ func TestConcurrentSafety(t *testing.T) {
 	}
 	wg.Wait()
 }
+
+// 删除测试
+func TestDelete(t *testing.T) {
+	s := New()
+
+	tests := []struct {
+		name string
+		key  string
+	}{
+		{"删除存在的键", "key1"},
+		{"删除不存在的键", "key2"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			s.Set(tt.key, "value")
+
+			s.Delete(tt.key)
+
+			_, ok := s.Get(tt.key)
+			if ok {
+				t.Errorf("Delete(%q)后，Get仍然返回 ok=true", tt.key)
+			}
+		})
+	}
+}
