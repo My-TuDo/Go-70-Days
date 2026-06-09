@@ -15,3 +15,13 @@ func TestSetAndGet(t *testing.T) {
 		t.Errorf("Expected value1, got %s", val)
 	}
 }
+
+// 不存在的key
+func TestGetMissing(t *testing.T) {
+	s := New()
+	_, ok := s.Get("not_exists")
+	// 期望： ok == false
+	if ok {
+		t.Errorf("Expected missing key to not exist")
+	}
+}
