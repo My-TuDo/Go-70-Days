@@ -108,3 +108,39 @@ func TestScanFile(t *testing.T) {
 	}
 
 }
+
+// 测试 ScanDir 函数
+func TestScanDir(t *testing.T) {
+	// 创建临时目录
+	dir := t.TempDir()
+
+	// 创建一个 .log 文件
+	logContent := "[ERROR] 数据库超时\n[INFO] 服务启动"
+	os.WriteFile(filepath.Join(dir, "sever.log"), []byte(logContent), 0644)
+
+	// 创建一个非 .log 文件
+	os.WriteFile(filepath.Join(dir, "readme.txt"), []byte("Hello World"), 0644)
+
+	result, err := ScanDir(dir)
+	if err != nil {
+		t.Fatalf("ScanDir 返回错误: %v", err)
+	}
+
+	// 验证结果
+	if result.Summary.TotalFiles != 1 {
+		t.Errorf("TotalFiles = %d，期望 1", result.Summary.TotalFiles)
+	}
+	if result.Summary.TotalLines != 2 {
+		t.Errorf("TotalLines = %d，期望 2", result.Summary.TotalLines)
+	}
+	if result.Summary.TotalByLevel[LevelError] != 1 {
+		t.Errorf("TotalByLevel[ERROR] = %d，期望 1", result.Summary.TotalByLevel[LevelError])
+	}
+	if result.Summary.TotalByLevel[LevelInfo] != 1 {
+		t.Errorf("TotalByLevel[INFO] = %d，期望 1", result.Summary.TotalByLevel[LevelInfo])
+	}
+	if len(result.Files) != 1 || result.Files[0].FilePath != filepath.Join(dir, "sever.log") {
+		t.Errorf("Files = %v，期望包含 sever.log", result.Files)
+	}
+
+}
