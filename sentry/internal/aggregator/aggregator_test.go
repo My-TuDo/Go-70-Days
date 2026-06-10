@@ -36,3 +36,26 @@ func TestShouldSend_Duplicate(t *testing.T) {
 		t.Errorf("同一报警在窗口内应返回 false，但返回了 true")
 	}
 }
+
+// 不同报警
+func TestShouldSend_DifferentAlert(t *testing.T) {
+	agg := New(5 * time.Minute)
+
+	alerts := []Alert{
+		{
+			Title:  "服务宕机",
+			Source: "prober",
+		},
+		{
+			Title:  " 磁盘告警",
+			Source: "prometheus",
+		},
+	}
+
+	ag.ShouldSend(alerts[0]) // 推送第一个报警
+
+	result := agg.ShouldSend(alerts[1]) // 推送第二个报警
+	if !result {
+		t.Errorf("不同报警应返回 true，但返回了 false")
+	}
+}
