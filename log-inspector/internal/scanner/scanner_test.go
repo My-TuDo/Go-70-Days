@@ -82,7 +82,7 @@ func TestScanFile(t *testing.T) {
 	tmpFile := filepath.Join(t.TempDir(), "test.log")
 	os.WriteFile(tmpFile, []byte(content), 0644)
 
-	result, err := ScanFile(tmpFile)
+	result, err := scanFile(tmpFile)
 	if err != nil {
 		t.Fatalf("ScanFile 返回错误: %v", err)
 	}
