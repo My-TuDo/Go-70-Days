@@ -59,3 +59,21 @@ func TestShouldSend_DifferentAlert(t *testing.T) {
 		t.Errorf("不同报警应返回 true，但返回了 false")
 	}
 }
+
+// 窗口过期后
+func TestShouldSend_AfterWindow(t *testing.T) {
+	agg := New(1 * time.Second) // 窗口设置为 1 秒
+
+	alert := Alert{
+		Title:  "服务宕机",
+		Source: "prober",
+	}
+	agg.ShouldSend(alert) // 第一次推送
+
+	time.Sleep(2 * time.Second) // 等待窗口过期
+
+	result := agg.ShouldSend(alert) // 第二次推送
+	if !result {
+		t.Errorf("窗口过期后同一报警应返回 true，但返回了 false")
+	}
+}
