@@ -80,6 +80,7 @@
 | kvault | internal/server | 100% |
 | sentry | internal/aggregator | 100% |
 | log-inspector | internal/scanner | 84% |
+| netdiag | internal/reporter | 37% |
 
 ---
 
