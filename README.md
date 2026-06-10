@@ -72,6 +72,17 @@
 - [📅 Day 51 - 资源深度采集与看板展示](./day51)
 - [📅 Day 52 - 进程收割与超时回收](./day52)
 
+## ✅ 测试覆盖
+
+| 项目 | 包 | 覆盖率 |
+|:-----|:---|:------:|
+| kvault | internal/store | 100% |
+| kvault | internal/server | 100% |
+| sentry | internal/aggregator | 100% |
+| log-inspector | internal/scanner | 84% |
+
+---
+
 ### 🛠️ 实战项目
 - [🔍 log-inspector — 日志巡检 CLI 工具](./log-inspector)
 - [📡 prober — 分布式服务拨测系统（高并发 + MySQL + Redis + Docker Compose）](./prober)
