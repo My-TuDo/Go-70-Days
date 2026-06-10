@@ -19,3 +19,20 @@ func TestShouldSend_NewAlert(t *testing.T) {
 		t.Errorf("新报警应返回 true，但返回了 false")
 	}
 }
+
+// 同一报警在窗口内再次来
+func TestShouldSend_Duplicate(t *testing.T) {
+	agg := New(5 * time.Minute)
+
+	alert := Alert{
+		Title:  "服务宕机",
+		Source: "prober",
+	}
+
+	agg.ShouldSend(alert) // 第一次推送
+
+	result := agg.ShouldSend(alert) // 第二次推送
+	if result {
+		t.Errorf("同一报警在窗口内应返回 false，但返回了 true")
+	}
+}
