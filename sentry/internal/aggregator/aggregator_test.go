@@ -52,7 +52,7 @@ func TestShouldSend_DifferentAlert(t *testing.T) {
 		},
 	}
 
-	ag.ShouldSend(alerts[0]) // 推送第一个报警
+	agg.ShouldSend(alerts[0]) // 推送第一个报警
 
 	result := agg.ShouldSend(alerts[1]) // 推送第二个报警
 	if !result {
