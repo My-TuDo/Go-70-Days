@@ -1,6 +1,9 @@
 package scanner
 
 import (
+	"os"
+	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -70,4 +73,38 @@ func TestCalcSummary(t *testing.T) {
 	if summary.TotalByLevel[LevelError] != 15 {
 		t.Errorf("TotalByLevel[ERROR] = %d，期望 15", summary.TotalByLevel[LevelError])
 	}
+}
+
+// 测试 ScanFile 函数
+func TestScanFile(t *testing.T) {
+	// 创造一个临时日志文件
+	content := "2026/01/01 [INFO] 服务启动\n2026/01/01 [WARN] 内存使用过高\n2026/01/01 [ERROR] 数据库超时"
+	tmpFile := filepath.Join(t.TempDir(), "test.log")
+	os.WriteFile(tmpFile, []byte(content), 0644)
+
+	result, err := ScanFile(tmpFile)
+	if err != nil {
+		t.Fatalf("ScanFile 返回错误: %v", err)
+	}
+
+	// 验证结果
+	if result.FilePath != tmpFile {
+		t.Errorf("FilePath = %q，期望 %q", result.FilePath, tmpFile)
+	}
+	if result.Total != 3 {
+		t.Errorf("Total = %d，期望 3", result.Total)
+	}
+	if result.Counts[LevelInfo] != 1 {
+		t.Errorf("Counts[INFO] = %d，期望 1", result.Counts[LevelInfo])
+	}
+	if result.Counts[LevelWarn] != 1 {
+		t.Errorf("Counts[WARN] = %d，期望 1", result.Counts[LevelWarn])
+	}
+	if result.Counts[LevelError] != 1 {
+		t.Errorf("Counts[ERROR] = %d，期望 1", result.Counts[LevelError])
+	}
+	if len(result.Errors) != 1 || !strings.Contains(result.Errors[0], "数据库超时") {
+		t.Errorf("Errors = %v，期望包含 '数据库超时'", result.Errors)
+	}
+
 }
