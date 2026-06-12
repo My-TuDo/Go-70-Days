@@ -1,0 +1,16 @@
+.
+├── cmd
+│   └── api
+│       └── main.go
+├── docker-compose.yml
+├── Dockerfile
+├── go.mod
+├── Makefile
+├── nginx
+│   └── default.conf
+├── README.md
+├── static
+│   └── index.html
+└── tree.txt
+
+5 directories, 9 files
